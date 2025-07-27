@@ -4,11 +4,6 @@ This project is a deep learning-based sentiment analysis web application that cl
 
 ---
 
-##  Demo
-
-Try out the live demo here (if deployed): **[Add your link]**
-
----
 
 ##  Model Architecture
 
