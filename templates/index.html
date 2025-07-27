@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Review Analyzer</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>🎬 Movie Review Analyzer</h1>
+      <textarea id="review" placeholder="Enter your movie review here..."></textarea>
+      <button id="analyzeBtn">Analyze Review</button>
+      <div id="result" class="result hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const reviewInput = document.getElementById('review');
+    const resultDiv = document.getElementById('result');
+
+    analyzeBtn.addEventListener('click', async () => {
+      const review = reviewInput.value.trim();
+      if (!review) return;
+
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = 'Analyzing...';
+
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ review })
+        });
+        const data = await res.json();
+
+        if (data.error) {
+          resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+        } else {
+          resultDiv.innerHTML = `
+            <p class="sentiment ${data.sentiment}">Sentiment: ${data.sentiment.toUpperCase()}</p>
+            <p class="confidence">Confidence: ${data.confidence}%</p>
+          `;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = '<p class="error">Something went wrong.</p>';
+      }
+    });
+  </script>
+</body>
+</html>
